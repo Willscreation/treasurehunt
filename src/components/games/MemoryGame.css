@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .grid {
     display: grid;
     grid-template-columns: repeat(2, 80px);
@@ -24,4 +25,32 @@
     background: lightgreen;
     cursor: default;
   }
+=======
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 80px);
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .card {
+    width: 80px;
+    height: 80px;
+    font-size: 30px;
+    text-align: center;
+    background: #fff;
+    border: 2px solid #000;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: scale(1.1);
+  }
+  
+  .card:disabled {
+    background: lightgreen;
+    cursor: default;
+  }
+>>>>>>> 605f993 (Initial commit)
   
