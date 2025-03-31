@@ -4,14 +4,17 @@ import Round1 from "./components/Round1";
 import Round2 from "./components/Round2";
 import Round3 from "./components/Round3";
 import FinalRound from "./components/FinalRound";
+import Home1 from "./components/Home1";
+import Begin from "./components/Begin";
 
 function App() {
   return (
     <Router>
       <div className="app">
-        <h1>Treasure Hunt</h1>
+        
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home1/>} />
+          <Route path="/" element={<Begin/>} />
           <Route path="/round1" element={<Round1 />} />
           <Route path="/round2" element={<Round2 />} />
           <Route path="/round3" element={<Round3 />} />

@@ -13,26 +13,16 @@ function FinalRound() {
   const [moves, setMoves] = useState(0);
   const [gameCompleted, setGameCompleted] = useState(false);
   const [showHint, setShowHint] = useState(false);
-  const countdownRef = useRef(null);
-  const [timeLeft, setTimeLeft] = useState(180); // 3 minutes countdown
-  const [isPaused, setIsPaused] = useState(false);
 
   // Initialize and shuffle grid
   useEffect(() => {
     shuffleGrid();
-    startCountdown();
-
-    // Clean up countdown on unmount
-    return () => {
-      if (countdownRef.current) clearInterval(countdownRef.current);
-    };
   }, []);
 
   // Watch for game completion
   useEffect(() => {
     if (progress === 100 && !gameCompleted) {
       setGameCompleted(true);
-      if (countdownRef.current) clearInterval(countdownRef.current);
       
       // Play success sound
       const successSound = new Audio("/victory.mp3");
@@ -42,33 +32,6 @@ function FinalRound() {
       triggerConfetti();
     }
   }, [progress, gameCompleted]);
-
-  const startCountdown = () => {
-    countdownRef.current = setInterval(() => {
-      if (!isPaused) {
-        setTimeLeft(prevTime => {
-          if (prevTime <= 1) {
-            clearInterval(countdownRef.current);
-            // Play failure sound
-            const failureSound = new Audio("/failure.mp3");
-            failureSound.play().catch(err => console.log("Audio play failed:", err));
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }
-    }, 1000);
-  };
-
-  const togglePause = () => {
-    setIsPaused(!isPaused);
-  };
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const triggerConfetti = () => {
     // This is a placeholder for confetti animation
@@ -162,7 +125,7 @@ function FinalRound() {
   };
 
   const handleTileClick = (r, c) => {
-    if (gameCompleted || timeLeft === 0) return;
+    if (gameCompleted) return;
     
     const directions = [
       [r - 1, c],
@@ -210,20 +173,6 @@ function FinalRound() {
       <div className="squid-final-header">
         <h2 className="squid-final-title">FINAL CHALLENGE</h2>
         <p className="squid-final-subtitle">Rearrange the tiles to reveal the fest logo</p>
-        
-        <div className="squid-final-timer-container">
-          <div className="squid-final-timer">
-            <span className={`squid-final-time ${timeLeft < 30 ? 'squid-final-time-warning' : ''}`}>
-              {formatTime(timeLeft)}
-            </span>
-          </div>
-          <button 
-            className="squid-final-pause-btn"
-            onClick={togglePause}
-          >
-            {isPaused ? "Resume" : "Pause"}
-          </button>
-        </div>
       </div>
       
       <div className="squid-final-game-area">
@@ -256,7 +205,7 @@ function FinalRound() {
                 } ${
                   showHint && canMove(rIndex, cIndex) ? 'squid-final-tile-hint' : ''
                 }`}
-                disabled={num === "" || !canMove(rIndex, cIndex) || gameCompleted || timeLeft === 0}
+                disabled={num === "" || !canMove(rIndex, cIndex) || gameCompleted}
               >
                 {num}
               </button>
@@ -268,7 +217,7 @@ function FinalRound() {
           <button 
             className="squid-final-control-btn squid-final-hint-btn" 
             onClick={getHint}
-            disabled={gameCompleted || timeLeft === 0}
+            disabled={gameCompleted}
           >
             Hint
           </button>
@@ -300,24 +249,11 @@ function FinalRound() {
           <div className="squid-final-completion">
             <h3 className="squid-final-completion-title">Challenge Complete!</h3>
             <p className="squid-final-completion-stats">
-              Time Remaining: {formatTime(timeLeft)} | Moves: {moves}
+              Moves: {moves}
             </p>
             <Link to="/completion" className="squid-final-next-btn">
               <span className="squid-final-next-text">Claim Your Prize</span>
             </Link>
-          </div>
-        )}
-        
-        {timeLeft === 0 && !gameCompleted && (
-          <div className="squid-final-failure">
-            <h3 className="squid-final-failure-title">Time's Up!</h3>
-            <p className="squid-final-failure-message">You failed to complete the challenge in time.</p>
-            <button 
-              className="squid-final-retry-btn"
-              onClick={shuffleGrid}
-            >
-              Try Again
-            </button>
           </div>
         )}
       </div>
