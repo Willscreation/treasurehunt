@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./styles/Round2.css";
+import AuthContext from "../contexts/AuthContext";
 
 function Round2() {
   const [answer, setAnswer] = useState("");
   const [isCorrect, setIsCorrect] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
   const [visible, setVisible] = useState(false);
+
+  const {URL}=useContext(AuthContext);
 
   useEffect(() => {
     // Fetch team and participants from localStorage
@@ -16,7 +19,7 @@ function Round2() {
     const participant2 = localStorage.getItem("m2");
 
     if (team && participant1 && participant2) {
-      axios.post("http://localhost:5000/api/round2", {
+      axios.post(URL+"/api/round2", {
         team,
         participant1,
         participant2,

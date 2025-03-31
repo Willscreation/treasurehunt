@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import "./styles/Round1.css";
+import AuthContext from "../contexts/AuthContext";
 
 function Round1() {
   const [visible, setVisible] = useState(false);
+
+  const {URL}=useContext(AuthContext);
 
   useEffect(() => {
     // Retrieve team and participants from localStorage
@@ -21,7 +24,7 @@ function Round1() {
       };
 
       // Send POST request to server
-      axios.post("http://localhost:5000/api/round1", requestData)
+      axios.post(URL+"/api/round1", requestData)
         .then(response => {
           console.log("Server Response:", response.data);
         })

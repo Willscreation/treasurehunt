@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import MazeGame from "./games/MazeGame";
 import MemoryGame from "./games/MemoryGame";
 import CardPuzzle from "./games/CardPuzzle";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import './styles/Round3.css';
+import AuthContext from "../contexts/AuthContext";
 
 function Round3() {
   const [pieces, setPieces] = useState([]);
@@ -15,6 +16,8 @@ function Round3() {
   const [activeGame, setActiveGame] = useState("maze");
   const [requestSent, setRequestSent] = useState(false);
 
+
+  const {URL}=useContext(AuthContext);
   // Send API request when component mounts, but only once
   useEffect(() => {
     const sendRoundData = async () => {
@@ -30,7 +33,7 @@ function Round3() {
         if (team) {
           const endTime = new Date().toISOString();
           
-          const response = await axios.post("http://localhost:5000/api/round3", {
+          const response = await axios.post(URL+"/api/round3", {
             team,
             participant1,
             participant2,

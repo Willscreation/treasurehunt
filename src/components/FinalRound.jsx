@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import festLogo from "../assets/logo.webp";
 import { Link } from "react-router-dom";
 import './styles/FinalRound.css';
 import axios from "axios";
+import AuthContext from "../contexts/AuthContext";
 
 function FinalRound() {
   const [grid, setGrid] = useState([
@@ -15,6 +16,8 @@ function FinalRound() {
   const [gameCompleted, setGameCompleted] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
+
+  const {URL}=useContext(AuthContext);
   // Send POST request on component mount
   useEffect(() => {
     const sendRoundData = async () => {
@@ -35,7 +38,7 @@ function FinalRound() {
           };
           
           // Send the request
-          const response = await axios.post("http://localhost:5000/api/round4", payload);
+          const response = await axios.post(URL+"/api/round4", payload);
           console.log("Round 4 data submitted:", response.data);
         } else {
           console.log("Team data not found in localStorage, skipping API request");
