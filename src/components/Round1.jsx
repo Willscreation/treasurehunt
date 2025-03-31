@@ -1,13 +1,40 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./styles/Round1.css";
 
 function Round1() {
   const [visible, setVisible] = useState(false);
-  
+
   useEffect(() => {
+    // Retrieve team and participants from localStorage
+    const team = localStorage.getItem("team");
+    const participant1 = localStorage.getItem("m1");
+    const participant2 = localStorage.getItem("m2");
+
+    if (team && participant1 && participant2) {
+      // Prepare request payload
+      const requestData = {
+        team,
+        participant1,
+        participant2,
+        endTime: "2025-03-31T15:00:00Z" // Default endTime
+      };
+
+      // Send POST request to server
+      axios.post("http://localhost:5000/api/round1", requestData)
+        .then(response => {
+          console.log("Server Response:", response.data);
+        })
+        .catch(error => {
+          console.error("Error sending data:", error);
+        });
+    } else {
+      console.log("Team or participants not found. Skipping server request.");
+    }
+
     // Log clue to console
     console.log("Your next clue: /round2");
-    
+
     // Trigger animation after a short delay
     setTimeout(() => {
       setVisible(true);

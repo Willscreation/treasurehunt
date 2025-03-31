@@ -3,6 +3,7 @@ import MazeGame from "./games/MazeGame";
 import MemoryGame from "./games/MemoryGame";
 import CardPuzzle from "./games/CardPuzzle";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import './styles/Round3.css';
 
 function Round3() {
@@ -12,6 +13,42 @@ function Round3() {
   const [memorySolved, setMemorySolved] = useState(false);
   const [cardSolved, setCardSolved] = useState(false);
   const [activeGame, setActiveGame] = useState("maze");
+  const [requestSent, setRequestSent] = useState(false);
+
+  // Send API request when component mounts, but only once
+  useEffect(() => {
+    const sendRoundData = async () => {
+      if (requestSent) return; // Skip if request was already sent
+      
+      try {
+        // Get team and participant data from localStorage
+        const team = localStorage.getItem("team") || "";
+        const participant1 = localStorage.getItem("m1") || "";
+        const participant2 = localStorage.getItem("m2") || "";
+        
+        // Only proceed with API call if we have team data
+        if (team) {
+          const endTime = new Date().toISOString();
+          
+          const response = await axios.post("http://localhost:5000/api/round3", {
+            team,
+            participant1,
+            participant2,
+            endTime
+          });
+          
+          console.log("Round 3 data submitted:", response.data);
+          setRequestSent(true); // Mark that request has been sent
+        } else {
+          console.log("Team information not found, proceeding without API call");
+        }
+      } catch (error) {
+        console.error("Error submitting round data:", error);
+      }
+    };
+    
+    sendRoundData();
+  }, [requestSent]); // Only depends on requestSent state
 
   const handleGameComplete = (newPiece, message, setSolved) => {
     if (!pieces.includes(newPiece)) {
