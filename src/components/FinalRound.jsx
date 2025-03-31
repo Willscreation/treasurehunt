@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import festLogo from "../assets/logo.webp";
 import { Link } from "react-router-dom";
 import './styles/FinalRound.css';
+import axios from "axios";
 
 function FinalRound() {
   const [grid, setGrid] = useState([
@@ -13,6 +14,40 @@ function FinalRound() {
   const [moves, setMoves] = useState(0);
   const [gameCompleted, setGameCompleted] = useState(false);
   const [showHint, setShowHint] = useState(false);
+
+  // Send POST request on component mount
+  useEffect(() => {
+    const sendRoundData = async () => {
+      try {
+        // Get team and participant data from localStorage
+        const team = localStorage.getItem("team") || "";
+        const participant1 = localStorage.getItem("m1") || "";
+        const participant2 = localStorage.getItem("m2") || "";
+        
+        // Only send request if we have team data
+        if (team) {
+          // Create request payload
+          const payload = {
+            team,
+            participant1,
+            participant2,
+            endTime: new Date().toISOString() // Current time as default end time
+          };
+          
+          // Send the request
+          const response = await axios.post("http://localhost:5000/api/round4", payload);
+          console.log("Round 4 data submitted:", response.data);
+        } else {
+          console.log("Team data not found in localStorage, skipping API request");
+        }
+      } catch (error) {
+        console.error("Error sending round data:", error);
+      }
+    };
+    
+    // Call the function
+    sendRoundData();
+  }, []);
 
   // Initialize and shuffle grid
   useEffect(() => {
