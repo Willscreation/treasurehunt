@@ -4,7 +4,7 @@ import axios from "axios";
 
 
 export const AuthState = ({ children }) => {
-    const URL = import.meta.env.VITE_URL;
+    const URL = "https://treasurehunt-3.onrender.com";
   
 
 
