@@ -6,6 +6,8 @@ import Round3 from "./components/Round3";
 import FinalRound from "./components/FinalRound";
 import Home1 from "./components/Home1";
 import Begin from "./components/Begin";
+import ViewData from "./components/ViewData";
+
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<Home1/>} />
           <Route path="/" element={<Begin/>} />
+          <Route path="/admin" element={<ViewData/>} />
           <Route path="/round1" element={<Round1 />} />
           <Route path="/round2" element={<Round2 />} />
           <Route path="/round3" element={<Round3 />} />
